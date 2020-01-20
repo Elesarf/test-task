@@ -69,9 +69,10 @@ ApplicationWindow
         Component.onCompleted: parent = mainWindow
     }
 
-    cover:  CoverPage{
+    cover:  Component{ id: appContainer
+        CoverPage{
             id: appCover
-    }
+    }}
 
     initialPage: FirstPage{
             id: mainPage

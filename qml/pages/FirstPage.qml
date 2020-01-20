@@ -14,6 +14,7 @@ Page {
 
         map.parent = this
         map.anchors.fill = this
+        map.enabled = true
 
         zoomIn.z = map.z + 1
         zoomOut.z = map.z + 1
@@ -46,9 +47,10 @@ Page {
         color: "grey"
         border.width: 1
 
-        width: 160
+        width: 100
         height: width
         radius: width / 2
+        opacity: 0.6
 
         anchors{
             right: parent.right
@@ -59,11 +61,13 @@ Page {
 
         Text {
             text: qsTr("+")
-            anchors{
-                fill: parent
-                horizontalCenter: parent.horizontalCenter
-                verticalCenter: parent.verticalCenter
-            }
+
+            anchors.fill: parent
+
+            font.pointSize: 48
+
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
         }
 
         MouseArea{
@@ -79,10 +83,10 @@ Page {
         color: "grey"
         border.width: 1
 
-        width: 160
+        width: 100
         height: width
         radius: width / 2
-        z: 2
+        opacity: 0.6
 
         anchors{
             right: parent.right
@@ -93,11 +97,13 @@ Page {
 
         Text {
             text: qsTr("-")
-            anchors{
-                fill: parent
-                horizontalCenter: parent.horizontalCenter
-                verticalCenter: parent.verticalCenter
-            }
+
+            anchors.fill: parent
+
+            font.pointSize: 48
+
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
         }
 
         MouseArea{

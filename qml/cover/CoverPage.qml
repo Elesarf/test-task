@@ -44,6 +44,7 @@ CoverBackground  {
         map.parent = this
         map.anchors.fill = this
         map.zoomLevel = map.maximumZoomLevel
+        map.enabled = false
     }
 }
 
