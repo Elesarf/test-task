@@ -47,9 +47,11 @@ ApplicationWindow
 
     onApplicationActiveChanged:{
         if (applicationActive){
+            mapWrapper.setState("page")
             mainPage.map = mapWrapper.getMap()
             appCover.map = null
         }else{
+            mapWrapper.setState("cover")
             appCover.map = mapWrapper.getMap()
             mainPage.map = null
         }

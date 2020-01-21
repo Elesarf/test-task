@@ -38,6 +38,8 @@ Page {
             map.zoomLevel -= 0.2
 
         currentZoomLevel = map.zoomLevel
+
+        console.log(map.maximumZoomLevel - map.zoomLevel)
     }
 
     Column{
