@@ -37,5 +37,6 @@ CONFIG += sailfishapp_i18n
 TRANSLATIONS += translations/$${TARGET}-ru.ts
 
 DISTFILES += \
-    qml/harbour-test-task.qml
+    qml/harbour-test-task.qml \
+    qml/MapWrapper.qml
 

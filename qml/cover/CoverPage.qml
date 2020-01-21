@@ -39,8 +39,6 @@ CoverBackground  {
         if (map === null)
             return
 
-        console.log("set map to cover")
-
         map.parent = this
         map.anchors.fill = this
         map.zoomLevel = map.maximumZoomLevel

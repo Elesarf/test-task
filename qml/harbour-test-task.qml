@@ -30,8 +30,6 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import QtLocation 5.0
-import QtPositioning 5.2
 
 import "pages"
 import "cover"
@@ -40,56 +38,21 @@ ApplicationWindow
 {
     id: mainWindow
 
-    PositionSource{
-        id: positionSource
+    cover: CoverPage{ id: appCover }
+    initialPage: FirstPage{ id: mainPage }
 
-        updateInterval: 4000
-        nmeaSource: "/usr/share/%1/nmea/output.nmea".arg(Qt.application.name)
-        active: true
-    }
-
-    Plugin {
-        id: osmPlugin
-        name: "osm"
-
-        PluginParameter
-        {
-            name: "osm"
-        }
-    }
-
-    Map {
-        id: sharedMap
-
-        zoomLevel: maximumZoomLevel
-        center: positionSource.position.coordinate
-
-        plugin: osmPlugin
-
-        Component.onCompleted: parent = mainWindow
-    }
-
-    cover:  Component{ id: appContainer
-        CoverPage{
-            id: appCover
-    }}
-
-    initialPage: FirstPage{
-            id: mainPage
+    MapWrapper{
+        id: mapWrapper
     }
 
     onApplicationActiveChanged:{
-
         if (applicationActive){
-            mainPage.map = sharedMap
+            mainPage.map = mapWrapper.getMap()
             appCover.map = null
-        }
-        else{
-            appCover.map = sharedMap
+        }else{
+            appCover.map = mapWrapper.getMap()
             mainPage.map = null
         }
-
-        console.log("state: " + applicationActive)
     }
 }
 

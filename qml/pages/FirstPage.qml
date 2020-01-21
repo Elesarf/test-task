@@ -16,8 +16,7 @@ Page {
         map.anchors.fill = this
         map.enabled = true
 
-        zoomIn.z = map.z + 1
-        zoomOut.z = map.z + 1
+        zoomControl.z = map.z + 1
 
         if (currentZoomLevel === 0)
             currentZoomLevel = map.zoomLevel
@@ -41,73 +40,32 @@ Page {
         currentZoomLevel = map.zoomLevel
     }
 
-    Rectangle{
-        id: zoomIn
+    Column{
+        id: zoomControl
 
-        color: "grey"
-        border.width: 1
+        y: parent.height / 2
+        anchors.right: parent.right
 
-        width: 100
-        height: width
-        radius: width / 2
-        opacity: 0.6
+        spacing: Theme.paddingSmall
 
-        anchors{
-            right: parent.right
-            rightMargin: 16
-            bottom: zoomOut.top
-            bottomMargin: 16
-        }
+        Button{
+            id: zoomIn
 
-        Text {
-            text: qsTr("+")
+            width: height
 
-            anchors.fill: parent
-
-            font.pointSize: 48
-
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-        }
-
-        MouseArea{
-            anchors.fill: parent
+            text: "+"
+            color: Theme.darkPrimaryColor
 
             onClicked: page.zoomIn()
         }
-    }
 
-    Rectangle{
-        id: zoomOut
+        Button{
+            id: zoomOut
 
-        color: "grey"
-        border.width: 1
+            width: height
 
-        width: 100
-        height: width
-        radius: width / 2
-        opacity: 0.6
-
-        anchors{
-            right: parent.right
-            rightMargin: 16
-            bottom: parent.bottom
-            bottomMargin: 16
-        }
-
-        Text {
-            text: qsTr("-")
-
-            anchors.fill: parent
-
-            font.pointSize: 48
-
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-        }
-
-        MouseArea{
-            anchors.fill: parent
+            text: "-"
+            color: Theme.darkPrimaryColor
 
             onClicked: page.zoomOut()
         }
