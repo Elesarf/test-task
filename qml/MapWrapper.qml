@@ -6,6 +6,16 @@ import QtPositioning 5.2
 Item {
     id: mW
 
+    property var model: null
+
+    onModelChanged:{
+
+        if (model !== null)
+            trackPointsView.model = model
+
+        console.log("model update")
+    }
+
     function getMap(){
         return sharedMap;
     }
@@ -13,6 +23,22 @@ Item {
     function setState(_state){
         if (_state === "page" || _state === "cover")
             mW.state = _state
+    }
+
+    function updateViewport(){
+        sharedMap.fitViewportToMapItems()
+    }
+
+    Timer
+    {
+        id: mapRefreshtimer
+        running: true
+        interval: 2000
+        repeat: true
+        onTriggered:
+        {
+            sharedMap.fitViewportToMapItems()
+        }
     }
 
     states: [
@@ -57,6 +83,22 @@ Item {
         center: positionSource.position.coordinate
 
         plugin: osmPlugin
+
+        MapItemView{
+            id: trackPointsView
+            model: markerModel
+
+            delegate: MapQuickItem {
+                coordinate: QtPositioning.coordinate(latitudeValue, longitudeValue)
+                sourceItem: Rectangle{
+                    width: Theme.iconSizeExtraSmall
+                    height: width
+                    radius: height / 2
+                    color: colorString
+                    border.width: 1
+                }
+            }
+        }
 
         MapQuickItem {
             id: marker

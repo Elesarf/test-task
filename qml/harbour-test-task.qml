@@ -41,6 +41,12 @@ ApplicationWindow
     cover: CoverPage{ id: appCover }
     initialPage: FirstPage{ id: mainPage }
 
+    Component.onCompleted: {
+        mapWrapper.model = dbusController.trackPointsModel
+    }
+
+    Connections{target: dbusController; onNewTrackPoint:{mapWrapper.updateViewport()} }
+
     MapWrapper{
         id: mapWrapper
     }

@@ -11,11 +11,14 @@
 
 # The name of your application
 
-    TARGET = harbour-test-task
+TARGET = harbour-test-task
 
 CONFIG += sailfishapp location
+QT += dbus
 
 SOURCES += src/main.cpp \
+    src/trackpointmodel.cpp \
+    src/dbuscontroller.cpp
 
 OTHER_FILES += \
     qml/cover/CoverPage.qml \
@@ -39,4 +42,10 @@ TRANSLATIONS += translations/$${TARGET}-ru.ts
 DISTFILES += \
     qml/harbour-test-task.qml \
     qml/MapWrapper.qml
+
+HEADERS += \
+    include/trackpointmodel.h \
+    include/dbuscontroller.h
+
+INCLUDEPATH += include
 
