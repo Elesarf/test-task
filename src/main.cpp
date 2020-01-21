@@ -30,10 +30,34 @@
 
 
 #include <QtQuick>
+#include <QtDBus/QtDBus>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 #include <sailfishapp.h>
+
+#include "trackpointmodel.h"
+#include "dbuscontroller.h"
 
 int main(int argc, char *argv[])
 {
-    return SailfishApp::main(argc, argv);
+    QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    QScopedPointer<QQuickView> v(SailfishApp::createView());
+
+    QDBusConnection::sessionBus().registerObject("/", v.data());
+    DBusController c(v.data());
+
+    if (!QDBusConnection::sessionBus().registerService("ass.home.QtDBus.testtask")) {
+        fprintf(stderr, "%s\n",
+                qPrintable(QDBusConnection::sessionBus().lastError().message()));
+        exit(1);
+    }
+
+    qmlRegisterType<TrackPointModel>("com.ass.testtask", 1, 0, "TrackPointModel");
+
+    v->rootContext()->setContextProperty("dbusController", &c);
+    v->setSource(SailfishApp::pathTo("qml/harbour-test-task.qml"));
+    v->show();
+
+    return app->exec();
 }
 
