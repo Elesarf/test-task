@@ -9,11 +9,8 @@ Item {
     property var model: null
 
     onModelChanged:{
-
         if (model !== null)
             trackPointsView.model = model
-
-        console.log("model update")
     }
 
     function getMap(){
@@ -29,16 +26,30 @@ Item {
         sharedMap.fitViewportToMapItems()
     }
 
-    Timer
-    {
-        id: mapRefreshtimer
-        running: true
-        interval: 2000
-        repeat: true
-        onTriggered:
-        {
-            sharedMap.fitViewportToMapItems()
-        }
+    function drawNewPoint(){
+        sharedMap.removeMapItem(markerItem)
+        sharedMap.zoomLevel = sharedMap.minimumZoomLevel - 1
+        sharedMap.center = QtPositioning.coordinate(0, 0)
+        sharedMap.fitViewportToMapItems()
+    }
+
+    function updateRect(mr){
+
+        sharedMap.clearMapItems()
+        sharedMap.drawingRegion = Qt.createQmlObject(
+                    'import QtLocation 5.0; MapRectangle {border.width: 2}',
+                    sharedMap)
+        sharedMap.drawingRegion.topLeft.latitude = mr.topLeftLat
+        sharedMap.drawingRegion.topLeft.longitude = mr.topLeftLon
+        sharedMap.drawingRegion.bottomRight.latitude = mr.bottomRightLat
+        sharedMap.drawingRegion.bottomRight.longitude = mr.bottomRightLon
+        sharedMap.addMapItem(sharedMap.drawingRegion)
+
+        sharedMap.center = QtPositioning.coordinate((mr.bottomRightLat + mr.topLeftLat) / 2,
+                                                    (mr.bottomRightLon + mr.topLeftLon) / 2)
+        sharedMap.zoomLevel = sharedMap.minimumZoomLevel - 1
+
+        sharedMap.fitViewportToMapItems()
     }
 
     states: [
@@ -69,20 +80,22 @@ Item {
     Plugin {
         id: osmPlugin
         name: "osm"
-
-        PluginParameter
-        {
-            name: "osm"
-        }
     }
 
     Map {
         id: sharedMap
 
-        zoomLevel: maximumZoomLevel
-        center: positionSource.position.coordinate
+        property MapRectangle drawingRegion
 
         plugin: osmPlugin
+        gesture.enabled: true
+
+        center: positionSource.position.coordinate
+
+        Component.onCompleted: {
+            zoomLevel = maximumZoomLevel
+            addMapItem(markerItem)
+        }
 
         MapItemView{
             id: trackPointsView
@@ -99,21 +112,21 @@ Item {
                 }
             }
         }
+    }
 
-        MapQuickItem {
-            id: marker
-            anchorPoint.x: meMarker.width/4
-            anchorPoint.y: meMarker.height
-            coordinate: positionSource.position.coordinate
+    MapQuickItem {
+        id: markerItem
+        anchorPoint.x: meMarker.width / 2
+        anchorPoint.y: meMarker.height / 2
+        coordinate: positionSource.position.coordinate
 
-            sourceItem: Rectangle{
-                id: meMarker
-                width: Theme.iconSizeExtraSmall
-                height: width
-                radius: height / 2
-                color: "green"
-                border.width: 1
-            }
+        sourceItem: Rectangle{
+            id: meMarker
+            width: Theme.iconSizeExtraSmall
+            height: width
+            radius: height / 2
+            color: "green"
+            border.width: 1
         }
     }
 }

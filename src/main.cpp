@@ -43,9 +43,9 @@ int main(int argc, char *argv[])
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QScopedPointer<QQuickView> v(SailfishApp::createView());
 
-    QDBusConnection::sessionBus().registerObject("/", v.data());
     DBusController c(v.data());
 
+    QDBusConnection::sessionBus().registerObject("/", v.data());
     if (!QDBusConnection::sessionBus().registerService("ass.home.QtDBus.testtask")) {
         fprintf(stderr, "%s\n",
                 qPrintable(QDBusConnection::sessionBus().lastError().message()));

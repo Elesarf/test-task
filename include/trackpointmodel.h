@@ -3,39 +3,12 @@
 
 #include <QAbstractListModel>
 
+#include "types.h"
+
 class TrackPointModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-
-    struct TrackPoint
-    {
-        TrackPoint(const qreal _lat, const qreal _lon, const QString &_color) :
-            lat(_lat),
-            lon(_lon),
-            color(_color)
-        {}
-
-        TrackPoint(const QVariantMap &map) :
-            lat(map["latitude"].toReal()),
-            lon(map["longitude"].toReal()),
-            color(map["color"].toString())
-        {}
-
-        QVariantMap toVariantMap() const
-        {
-            return
-            {
-                {"latitude", lat},
-                {"longitude", lon},
-                {"color", color}
-            };
-        }
-
-        qreal lat;
-        qreal lon;
-        QString color;
-    };
 
     using TrackPointList = QList<TrackPoint>;
 

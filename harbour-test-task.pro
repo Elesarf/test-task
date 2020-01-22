@@ -45,7 +45,8 @@ DISTFILES += \
 
 HEADERS += \
     include/trackpointmodel.h \
-    include/dbuscontroller.h
+    include/dbuscontroller.h \
+    include/types.h
 
 INCLUDEPATH += include
 

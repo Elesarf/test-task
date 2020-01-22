@@ -27,7 +27,7 @@ Page {
     function zoomIn(){
 
         if (map.zoomLevel < map.maximumZoomLevel)
-            map.zoomLevel += 0.2
+            map.zoomLevel += 0.6
 
         currentZoomLevel = map.zoomLevel
     }
@@ -35,7 +35,7 @@ Page {
     function zoomOut(){
 
         if (map.zoomLevel > map.minimumZoomLevel)
-            map.zoomLevel -= 0.2
+            map.zoomLevel -= 0.6
 
         currentZoomLevel = map.zoomLevel
 

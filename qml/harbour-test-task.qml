@@ -45,7 +45,8 @@ ApplicationWindow
         mapWrapper.model = dbusController.trackPointsModel
     }
 
-    Connections{target: dbusController; onNewTrackPoint:{mapWrapper.updateViewport()} }
+    Connections{target: dbusController; onNewTrackPoint:{mapWrapper.drawNewPoint()} }
+    Connections{target: dbusController; onMapRectangleChanged:{mapWrapper.updateRect(mapRectangle)} }
 
     MapWrapper{
         id: mapWrapper

@@ -1,6 +1,6 @@
 Name:    harbour-test-task
 Summary: TestApp
-Version: 0.2
+Version: 0.3
 Release: 0.1
 Group: Qt/Qt
 URL: http://harbour-test-task.org/
@@ -36,7 +36,6 @@ Requires:
   - qt5-plugin-geoservices-osm
   - qt5-qtdeclarative-import-location
   - qt5-qtdeclarative-import-positioning
-  - nemo-qml-plugin-dbus-qt5
 
 # All installed files
 Files:
