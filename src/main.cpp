@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     DBusController c(v.data());
 
     QDBusConnection::sessionBus().registerObject("/", v.data());
-    if (!QDBusConnection::sessionBus().registerService("ass.home.QtDBus.testtask")) {
+    if (!QDBusConnection::sessionBus().registerService("ass.home.testtask")) {
         fprintf(stderr, "%s\n",
                 qPrintable(QDBusConnection::sessionBus().lastError().message()));
         exit(1);

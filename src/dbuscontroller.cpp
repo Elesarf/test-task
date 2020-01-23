@@ -2,25 +2,23 @@
 #include <QColor>
 #include <QtDBus/QtDBus>
 #include <QDBusMetaType>
+
 #include "trackpointmodel.h"
 #include "dbuscontroller.h"
 
-DBusController::DBusController(QObject *parent) : QDBusAbstractAdaptor(parent),
-    m_trackPointsModel(new TrackPointModel(this))
+DBusController::DBusController(QObject *parent) : QDBusAbstractAdaptor(parent)
 {
     qRegisterMetaType<GeoRectangle>("GeoRectangle");
     qDBusRegisterMetaType<GeoRectangle>();
+
+    m_trackPointsModel = QSharedPointer<TrackPointModel>(new TrackPointModel);
 }
 
-DBusController::~DBusController()
-{
-    if (m_trackPointsModel != nullptr)
-        delete m_trackPointsModel;
-}
+DBusController::~DBusController(){}
 
 TrackPointModel *DBusController::trackPointsModel()
 {
-    return m_trackPointsModel;
+    return m_trackPointsModel.data();
 }
 
 GeoRectangle DBusController::geoCoordViewport() const
@@ -85,9 +83,6 @@ void DBusController::setGeoCoordViewport(GeoRectangle geoCoordViewport)
 
 void DBusController::setGeoCoordMapCenter(QPointF geoCoordMapCenter)
 {
-    if (m_geoCoordMapCenter == geoCoordMapCenter)
-        return;
-
     m_geoCoordMapCenter = geoCoordMapCenter;
     emit geoCoordMapCenterChanged(m_geoCoordMapCenter);
 }

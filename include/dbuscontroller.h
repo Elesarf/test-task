@@ -1,20 +1,17 @@
 #ifndef DBUSCONTROLLER_H
 #define DBUSCONTROLLER_H
 
-#include <QObject>
-#include <QMetaType>
-#include <QPointF>
 #include <QtDBus/QDBusAbstractAdaptor>
-#include <QtDBus/QDBusVariant>
+#include <QSharedPointer>
+#include <QPointF>
 
 #include "types.h"
 
 class TrackPointModel;
-
 class DBusController : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "ass.home.QtDBus.testtask.MapController")
+    Q_CLASSINFO("D-Bus Interface", "ass.home.testtask.MapController")
 
     Q_PROPERTY(TrackPointModel *trackPointsModel READ trackPointsModel)
     Q_PROPERTY(GeoRectangle geoCoordViewport READ geoCoordViewport WRITE setGeoCoordViewport NOTIFY geoCoordViewportChanged)
@@ -25,7 +22,7 @@ public:
     explicit DBusController(QObject *parent);
     ~DBusController();
 
-    TrackPointModel * trackPointsModel();
+    TrackPointModel *trackPointsModel();
     GeoRectangle geoCoordViewport() const;
     QPointF geoCoordMapCenter() const;
     double zoom() const;
@@ -45,14 +42,15 @@ signals:
     void drawRect();
     void mapRectangleChanged(const GeoRectangle &mapRectangle);
 
-    void geoCoordViewportChanged(GeoRectangle geoCoordViewport);
-    void geoCoordMapCenterChanged(QPointF geoCoordMapCenter);
-    void zoomChanged(double zoom);
+    Q_NOREPLY void geoCoordViewportChanged(GeoRectangle geoCoordViewport);
+    Q_NOREPLY void geoCoordMapCenterChanged(QPointF geoCoordMapCenter);
+    Q_NOREPLY void zoomChanged(double zoom);
 
 private:
-    TrackPointModel *m_trackPointsModel;
+    QSharedPointer<TrackPointModel> m_trackPointsModel;
     GeoRectangle m_geoCoordViewport;
     QPointF m_geoCoordMapCenter;
+
     double m_zoom;
 };
 

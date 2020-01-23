@@ -21,6 +21,15 @@ public:
         bottomRightLat(_bottomRightLat)
     {}
 
+    GeoRectangle &operator= (const GeoRectangle &other)
+    {
+        topLeftLon = other.topLeftLon;
+        topLeftLat = other.topLeftLat;
+        bottomRightLon = other.bottomRightLon;
+        bottomRightLat = other.bottomRightLat;
+        return *this;
+    }
+
     double topLeftLon{0};
     double topLeftLat{0};
     double bottomRightLon{0};
