@@ -48,8 +48,13 @@ ApplicationWindow
     Connections{target: dbusController; onNewTrackPoint:{mapWrapper.drawNewPoint()} }
     Connections{target: dbusController; onMapRectangleChanged:{mapWrapper.updateRect(mapRectangle)} }
 
+
     MapWrapper{
         id: mapWrapper
+
+        onZoomChanged: dbusController.setZoom(zoom)
+        onCenterCoordChanged: dbusController.setGeoCoordMapCenter(lat, lon)
+        onViewportCoordChanged: dbusController.setGeoCoordViewport(topLeftLat, topLeftLon, bottomRightLat, bottomRightLon)
     }
 
     onApplicationActiveChanged:{

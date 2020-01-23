@@ -8,6 +8,10 @@ Item {
 
     property var model: null
 
+    signal viewportCoordChanged(real topLeftLat, real topLeftLon, real bottomRightLat, real bottomRightLon)
+    signal centerCoordChanged(real lat, real lon)
+    signal zoomChanged(real zoom)
+
     onModelChanged:{
         if (model !== null)
             trackPointsView.model = model

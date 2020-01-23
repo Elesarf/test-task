@@ -2,7 +2,6 @@
 #include <QColor>
 #include <QtDBus/QtDBus>
 #include <QDBusMetaType>
-#include "types.h"
 #include "trackpointmodel.h"
 #include "dbuscontroller.h"
 
@@ -24,6 +23,21 @@ TrackPointModel *DBusController::trackPointsModel()
     return m_trackPointsModel;
 }
 
+GeoRectangle DBusController::geoCoordViewport() const
+{
+    return m_geoCoordViewport;
+}
+
+QPointF DBusController::geoCoordMapCenter() const
+{
+    return m_geoCoordMapCenter;
+}
+
+double DBusController::zoom() const
+{
+    return m_zoom;
+}
+
 static inline bool isGeoCoordinateValid(double lat, double lon)
 {
     if (-90 > lat && lat > 90)
@@ -33,6 +47,11 @@ static inline bool isGeoCoordinateValid(double lat, double lon)
         return false;
 
     return true;
+}
+
+void DBusController::setGeoCoordViewport(double topLeftLat, double topLeftLon, double bottomRightLat, double bottomRightLon)
+{
+    setGeoCoordViewport(GeoRectangle(topLeftLon, topLeftLat, bottomRightLon, bottomRightLat));
 }
 
 void DBusController::addTrackPoint(double lat, double lon, const QString &color)
@@ -56,4 +75,29 @@ void DBusController::setNewRect(double topLeftLat, double topLeftLon, double bot
         return;
 
     emit mapRectangleChanged(GeoRectangle(topLeftLon, topLeftLat, bottomRightLon, bottomRightLat));
+}
+
+void DBusController::setGeoCoordViewport(GeoRectangle geoCoordViewport)
+{
+    m_geoCoordViewport = geoCoordViewport;
+    emit geoCoordViewportChanged(m_geoCoordViewport);
+}
+
+void DBusController::setGeoCoordMapCenter(QPointF geoCoordMapCenter)
+{
+    if (m_geoCoordMapCenter == geoCoordMapCenter)
+        return;
+
+    m_geoCoordMapCenter = geoCoordMapCenter;
+    emit geoCoordMapCenterChanged(m_geoCoordMapCenter);
+}
+
+void DBusController::setZoom(double zoom)
+{
+    qWarning("Floating point comparison needs context sanity check");
+    if (qFuzzyCompare(m_zoom, zoom))
+        return;
+
+    m_zoom = zoom;
+    emit zoomChanged(m_zoom);
 }
