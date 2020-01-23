@@ -8,6 +8,20 @@ Page {
     property var map: null
     property double currentZoomLevel: 0.0
 
+    function zoomIn(){
+        if (map.zoomLevel < map.maximumZoomLevel)
+            map.zoomLevel += 0.6
+
+        currentZoomLevel = map.zoomLevel
+    }
+
+    function zoomOut(){
+        if (map.zoomLevel > map.minimumZoomLevel)
+            map.zoomLevel -= 0.6
+
+        currentZoomLevel = map.zoomLevel
+    }
+
     onMapChanged: {
         if (map === null)
             return
@@ -24,30 +38,11 @@ Page {
         map.zoomLevel = currentZoomLevel
     }
 
-    function zoomIn(){
-
-        if (map.zoomLevel < map.maximumZoomLevel)
-            map.zoomLevel += 0.6
-
-        currentZoomLevel = map.zoomLevel
-    }
-
-    function zoomOut(){
-
-        if (map.zoomLevel > map.minimumZoomLevel)
-            map.zoomLevel -= 0.6
-
-        currentZoomLevel = map.zoomLevel
-
-        console.log(map.maximumZoomLevel - map.zoomLevel)
-    }
-
     Column{
         id: zoomControl
 
         y: parent.height / 2
         anchors.right: parent.right
-
         spacing: Theme.paddingSmall
 
         Button{

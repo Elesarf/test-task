@@ -6,11 +6,16 @@
 #include "trackpointmodel.h"
 #include "dbuscontroller.h"
 
-DBusController::DBusController(QObject *parent) : QDBusAbstractAdaptor(parent)
+DBusController::DBusController(QObject *parent) : QDBusAbstractAdaptor(parent),
+    m_geoCoordViewport(0.0, 0.0, 0.0, 0.0),
+    m_geoCoordMapCenter(0.0, 0.0),
+    m_zoom(0.0)
 {
+    // register GeoRectangle type for qt
     qRegisterMetaType<GeoRectangle>("GeoRectangle");
+    // register GeoRectangle type for dbus
     qDBusRegisterMetaType<GeoRectangle>();
-
+    // reset model
     m_trackPointsModel = QSharedPointer<TrackPointModel>(new TrackPointModel);
 }
 
@@ -36,24 +41,13 @@ double DBusController::zoom() const
     return m_zoom;
 }
 
-static inline bool isGeoCoordinateValid(double lat, double lon)
-{
-    if (-90 > lat && lat > 90)
-        return false;
-
-    if (-180 > lon && lon > 180)
-        return false;
-
-    return true;
-}
-
-void DBusController::setGeoCoordViewport(double topLeftLat, double topLeftLon, double bottomRightLat, double bottomRightLon)
-{
-    setGeoCoordViewport(GeoRectangle(topLeftLon, topLeftLat, bottomRightLon, bottomRightLat));
-}
-
 void DBusController::addTrackPoint(double lat, double lon, const QString &color)
 {
+    /*
+     * Check coordinates and color.
+     * If all right, add new track point to model
+     */
+
     if (!isGeoCoordinateValid(lon, lat))
         return;
 
@@ -64,7 +58,14 @@ void DBusController::addTrackPoint(double lat, double lon, const QString &color)
     emit newTrackPoint();
 }
 
-void DBusController::setNewRect(double topLeftLat, double topLeftLon, double bottomRightLat, double bottomRightLon)
+void DBusController::setGeoCoordViewport(double topLeftLat, double topLeftLon,
+                                         double bottomRightLat, double bottomRightLon)
+{
+    setGeoCoordViewport(GeoRectangle(topLeftLon, topLeftLat, bottomRightLon, bottomRightLat));
+}
+
+void DBusController::setNewRect(double topLeftLat, double topLeftLon,
+                                double bottomRightLat, double bottomRightLon)
 {
     if (!isGeoCoordinateValid(topLeftLon, topLeftLat))
         return;
@@ -89,10 +90,20 @@ void DBusController::setGeoCoordMapCenter(QPointF geoCoordMapCenter)
 
 void DBusController::setZoom(double zoom)
 {
-    qWarning("Floating point comparison needs context sanity check");
     if (qFuzzyCompare(m_zoom, zoom))
         return;
 
     m_zoom = zoom;
     emit zoomChanged(m_zoom);
+}
+
+bool DBusController::isGeoCoordinateValid(double lat, double lon)
+{
+    if (-90 > lat && lat > 90)
+        return false;
+
+    if (-180 > lon && lon > 180)
+        return false;
+
+    return true;
 }

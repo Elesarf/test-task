@@ -5,6 +5,14 @@
 #include <QMetaType>
 #include <QtDBus/QDBusArgument>
 
+/*!
+ * \brief The GeoRectangle struct represent rectangle with
+ * a geographic coordinate system.
+ *
+ * |[top left lat][top left lon] -------------------------|
+ * |                                                      |
+ * |-----------------[bottom right lat] [bottom right lon]|
+ */
 struct GeoRectangle
 {
     Q_GADGET
@@ -12,6 +20,7 @@ struct GeoRectangle
     Q_PROPERTY(double topLeftLat MEMBER topLeftLat)
     Q_PROPERTY(double bottomRightLon MEMBER bottomRightLon)
     Q_PROPERTY(double bottomRightLat MEMBER bottomRightLat)
+
 public:
     GeoRectangle(){}
     GeoRectangle(double _topLeftLat, double _topLeftLon, double _bottomRightLat, double _bottomRightLon):
@@ -36,6 +45,12 @@ public:
     double bottomRightLat{0};
 };
 
+/*!
+ * \brief operator << marshalling GeoRectangle
+ * \param argument QDBusArgument
+ * \param arg GeoRectangle to marhalling
+ * \return
+ */
 static QDBusArgument& operator <<(QDBusArgument &argument, const GeoRectangle & arg)
 {
     argument.beginStructure();
@@ -44,6 +59,12 @@ static QDBusArgument& operator <<(QDBusArgument &argument, const GeoRectangle & 
     return argument;
 }
 
+/*!
+ * \brief operator >> demarshalling GeoRectangle
+ * \param argument QDBusArgument
+ * \param arg GeoRectangle to demarhalling
+ * \return
+ */
 static const QDBusArgument& operator >>(const QDBusArgument &argument, GeoRectangle & arg)
 {
     argument.beginStructure();
@@ -53,6 +74,12 @@ static const QDBusArgument& operator >>(const QDBusArgument &argument, GeoRectan
 }
 Q_DECLARE_METATYPE(GeoRectangle)
 
+/*!
+ * \brief The TrackPoint struct represent one point to draw on map.
+ *
+ * Point use geographic coordinate system, and string representation
+ * of QColor
+ */
 struct TrackPoint
 {
     TrackPoint(const double _lat, const double _lon, const QString &_color) :
@@ -67,6 +94,10 @@ struct TrackPoint
         color(map["color"].toString())
     {}
 
+    /*!
+     * \brief toVariantMap serilize from point to VariantMap
+     * \return
+     */
     QVariantMap toVariantMap() const
     {
         return

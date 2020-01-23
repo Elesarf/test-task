@@ -5,20 +5,24 @@
 
 #include "types.h"
 
+/*!
+ * \brief The TrackPointModel class just list model of TrackPoints
+ */
 class TrackPointModel : public QAbstractListModel
 {
     Q_OBJECT
-public:
 
+public:
     using TrackPointList = QList<TrackPoint>;
 
-    explicit TrackPointModel(QObject *parent = nullptr);
+    enum trackPointRoles
+    {
+        Latitude = Qt::UserRole + 1,
+        Longitude,
+        Color
+    };
 
-    enum trackPointRoles{
-            Latitude = Qt::UserRole + 1,
-            Longitude,
-            Color
-        };
+    explicit TrackPointModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;

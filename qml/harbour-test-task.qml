@@ -45,15 +45,21 @@ ApplicationWindow
         mapWrapper.model = dbusController.trackPointsModel
     }
 
-    Connections{target: dbusController; onNewTrackPoint:{mapWrapper.drawNewPoint()} }
-    Connections{target: dbusController; onMapRectangleChanged:{mapWrapper.updateRect(mapRectangle)} }
+    Connections{
+        target: dbusController
+        onNewTrackPoint: mapWrapper.drawNewPoint()
+    }
 
+    Connections{
+        target: dbusController
+        onMapRectangleChanged: mapWrapper.updateRect(mapRectangle)
+    }
 
     MapWrapper{
         id: mapWrapper
 
         onZoomChanged: dbusController.setZoom(zoom)
-        onCenterCoordChanged: dbusController.setGeoCoordMapCenter(lat, lon)
+        onCenterCoordChanged: dbusController.setGeoCoordMapCenter(Qt.point(lat, lon))
         onViewportCoordChanged: dbusController.setGeoCoordViewport(topLeftLat, topLeftLon, bottomRightLat, bottomRightLon)
     }
 

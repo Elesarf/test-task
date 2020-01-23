@@ -3,19 +3,23 @@ import QtLocation 5.0
 import Sailfish.Silica 1.0
 import QtPositioning 5.2
 
+/*
+    Current version of QtLocation work incorrect.
+    fitViewportToMapItems() function unexpected behavior.
+    Check with https://gist.github.com/Elesarf/3317a4565c957a1e94707b3729843cc0
+    QtLocation 5.5, Qt 5.13.1 - correct.
+ */
+
 Item {
     id: mW
 
     property var model: null
 
-    signal viewportCoordChanged(real topLeftLat, real topLeftLon, real bottomRightLat, real bottomRightLon)
+    // current signal not connected. Visible region not available?
+    signal viewportCoordChanged(real topLeftLat, real topLeftLon,
+                                real bottomRightLat, real bottomRightLon)
     signal centerCoordChanged(real lat, real lon)
     signal zoomChanged(real zoom)
-
-    onModelChanged:{
-        if (model !== null)
-            trackPointsView.model = model
-    }
 
     function getMap(){
         return sharedMap;
@@ -38,7 +42,6 @@ Item {
     }
 
     function updateRect(mr){
-
         sharedMap.clearMapItems()
         sharedMap.drawingRegion = Qt.createQmlObject(
                     'import QtLocation 5.0; MapRectangle {border.width: 2}',
@@ -56,22 +59,10 @@ Item {
         sharedMap.fitViewportToMapItems()
     }
 
-    states: [
-        State {
-            name: "page"
-            PropertyChanges {
-                target: meMarker
-                width: Theme.iconSizeExtraSmall
-            }
-        },
-        State {
-            name: "cover"
-            PropertyChanges {
-                target: meMarker
-                width: Theme.iconSizeExtraSmall / 2
-            }
-        }
-    ]
+    onModelChanged:{
+        if (model !== null)
+            trackPointsView.model = model
+    }
 
     PositionSource{
         id: positionSource
@@ -116,6 +107,9 @@ Item {
                 }
             }
         }
+
+        onZoomLevelChanged: zoomChanged(sharedMap.zoomLevel)
+        onCenterChanged: centerCoordChanged(sharedMap.center.latitude, sharedMap.center.longitude)
     }
 
     MapQuickItem {
@@ -133,4 +127,21 @@ Item {
             border.width: 1
         }
     }
+
+    states: [
+        State {
+            name: "page"
+            PropertyChanges {
+                target: meMarker
+                width: Theme.iconSizeExtraSmall
+            }
+        },
+        State {
+            name: "cover"
+            PropertyChanges {
+                target: meMarker
+                width: Theme.iconSizeExtraSmall / 2
+            }
+        }
+    ]
 }
