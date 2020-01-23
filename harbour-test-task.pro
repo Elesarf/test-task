@@ -34,6 +34,15 @@ nmea.path = /usr/share/$$TARGET/nmea
 
 INSTALLS += nmea
 
+QMAKE_EXTRA_TARGETS += version_build
+
+version_build.target = build_number
+version_build.commands = mv $$PWD/build_number $$PWD/scripts \
+                         && python3 $$PWD/scripts/build_number.py -p \
+                         && mv $$PWD/scripts/build_number $$PWD/
+version_build.config = phony
+PRE_TARGETDEPS += build_number
+
 # to disable building translations every time, comment out the
 # following CONFIG line
 CONFIG += sailfishapp_i18n
